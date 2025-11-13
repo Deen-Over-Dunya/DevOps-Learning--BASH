@@ -166,25 +166,17 @@ Mission: Create a script that searches for a specific word or phrase across all 
 
 #!/bin/bash
 
-echo "Type directory"
-read dir
-echo "Directory selected:$dir"
-echo "Type what string you want to find"
-read search
-echo "String: '$search'"
+read directory
+echo "Directory: $directory"
 
-if [ ! -d $dir ]; then
-  echo "Directory does not exist"
-  exit 1
-else
-  echo "Here is the list"
+read text
+echo "Word(s): $text"
+
+if [ ! ls -d $directory ]; then
+    echo "$directory does not exist"
+    exit 1
 fi
-
-grep -l "$search" "$dir"/*.log
-
-
-
-
+    grep -l "$text" "$directory"/*.log
 
 
 
@@ -192,7 +184,23 @@ Level 9: Script to Monitor Directory Changes
 
 Mission: Write a script that monitors a directory for any changes (file creation, modification, or deletion) and logs the changes with a timestamp.
 
+#!/bin/bash
 
+DIRECTORY="Arena"
+LOG_FILE="change_log.txt"
+
+if [ ! -d "$DIRECTORY" ]; then
+    echo "Directory does not exist."
+    exit 1
+fi
+
+fswatch -r "$DIRECTORY" | while read event; do
+    if [ -e "$event" ]; then
+        echo "$(date +'%Y-%m-%d %H:%M:%S') File modified/created: $event" >> "$LOG_FILE"
+    else
+        echo "$(date +'%Y-%m-%d %H:%M:%S') File deleted: $event" >> "$LOG_FILE"
+    fi
+done
 
 
 
@@ -209,6 +217,10 @@ Mission: Write a script that:
 3. Generates a random number of lines (between 10 and 20) in each file.
 4. Sorts these files by their size and displays the list.
 5. Checks if any of the files contain the word 'Victory', and if found, moves the file to a directory called Victory_Archive.
+
+
+
+
 
 
 
